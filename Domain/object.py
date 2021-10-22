@@ -41,10 +41,14 @@ def get_location(obj):
 
 
 def set_name(obj, name):
+    if name == "":
+        raise ValueError("Numele nu poate fi string gol")
     obj["name"] = name
 
 
 def set_description(obj, description):
+    if description == "":
+        raise ValueError("Descriptia nu poate fi string gol")
     obj["description"] = description
 
 
@@ -67,4 +71,3 @@ if __name__ == "__main__":
     except ValueError as ve:
         print(ve)
     print(obj)
-    print(True)

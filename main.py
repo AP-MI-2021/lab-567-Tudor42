@@ -14,9 +14,11 @@ Cerinte:
     6. Afișarea sumelor prețurilor pentru fiecare locație.
     7. Undo.
 """
+import UserInterface.ui as ui
 
 
 def main():
+    ui.run()
     pass
 
 

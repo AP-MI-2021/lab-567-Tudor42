@@ -1,6 +1,15 @@
-from object import *
+from json.decoder import JSONDecodeError
+from Domain.object import *
 from json import loads, dumps
 from os import getcwd, chdir
+
+"""
+Inventory:
+    data:
+        objects info
+    folder:
+        path to saved files
+"""
 
 
 def creaza_inventoriu(file_name=None, file_path=None):
@@ -27,6 +36,12 @@ def creaza_inventoriu(file_name=None, file_path=None):
 def save_data(inventory, file_name="swap.json"):
     """
     Save invetory data in a file for later use
+    param:
+        inventory instance
+        file_name
+    return:
+        -1 - if fails
+        0 - if succeds
     """
     if file_name[-5:] != ".json":
         file_name += ".json"
@@ -36,11 +51,16 @@ def save_data(inventory, file_name="swap.json"):
     for obj in inventory['data'].values():
         d[n] = obj
         n += 1
-    with open(file_name, "w") as fout:
-        fout.write(dumps(d))
+    try:
+        with open(file_name, "w") as fout:
+            fout.write(dumps(d))
+    except FileNotFoundError as err:
+        print(err)
+        return -1
+    return 0
 
 
-def get_data(file_name):
+def get_data(file_name="swap.json", inventory=None):
     """
     Get inventory data from file
     param:
@@ -51,8 +71,15 @@ def get_data(file_name):
     if file_name[-5:] != ".json":
         file_name += ".json"
     d = dict()
-    for value in loads(open(file_name, "r").read()).values():
-        d[value["ID"]] = value
+    try:
+        for value in loads(open(file_name, "r").read()).values():
+            d[value["ID"]] = value
+        if inventory is not None:
+            inventory['data'] = d
+    except JSONDecodeError:
+        pass
+    except FileNotFoundError:
+        open(file_name, "w")
     return d
 
 
@@ -104,19 +131,56 @@ def modify_obj(inventory, ID, name=None, description=None, price=None,
     param:
     return:
         1 - successful operation
-        -1 - object with such ID doesnt exist
+        -2 - object with such ID doesnt exist
+        -1 - invalid input
     """
     if ID not in inventory['data'].keys():
+        return -2
+    try:
+        if name is not None:
+            set_name(inventory['data'][ID], name)
+        if description is not None:
+            set_description(inventory['data'][ID], description)
+        if price is not None:
+            set_price(inventory['data'][ID], price)
+        if location is not None:
+            set_location(inventory['data'][ID], location)
+    except ValueError as ve:
+        print(ve)
         return -1
-    if name is not None:
-        set_name(inventory['data'][ID], name)
-    if description is not None:
-        set_description(inventory['data'][ID], description)
-    if price is not None:
-        set_price(inventory['data'][ID], price)
-    if location is not None:
-        set_location(inventory['data'][ID], location)
     return 1
+
+
+def set_folder(inventory, new_path):
+    try:
+        chdir(new_path)
+    except NotADirectoryError as err:
+        print(err)
+        return -1
+    except OSError as err:
+        print(err)
+        return -1
+    except FileNotFoundError as err:
+        print(err)
+        return -1
+    inventory['folder'] = getcwd()
+    return 0
+
+
+def get_obj_IDs(inventory):
+    return inventory['data'].keys()
+
+
+def get_obj_data(inventory, ID):
+    obj = inventory['data'][ID]
+    str = """-------------
+    ID: {}
+    Nume: {}
+    Descriptie: {}
+    Pret: {}
+    Locatie: {}""".format(ID, obj["name"], obj["description"],
+                          obj["price"], obj["location"])
+    return str
 
 
 if __name__ == "__main__":
