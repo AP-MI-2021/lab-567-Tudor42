@@ -1,3 +1,12 @@
+"""
+Obiect:
+    ID - id obiect
+    name - nume obiect
+    description - descriptie obiect
+    price - pret obiect
+    location - locatie obiect
+"""
+
 
 def creaza_obiect(object_id: int, name: str, description: str, price=None,
                   location=None):

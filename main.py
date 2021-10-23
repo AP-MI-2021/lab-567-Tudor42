@@ -19,7 +19,6 @@ import UserInterface.ui as ui
 
 def main():
     ui.run()
-    pass
 
 
 if __name__ == "__main__":

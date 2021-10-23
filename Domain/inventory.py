@@ -5,14 +5,20 @@ from os import getcwd, chdir
 
 """
 Inventory:
-    data:
-        objects info
-    folder:
-        path to saved files
+    data - dictionary of objects
+    folder - path to saved files
 """
 
 
 def creaza_inventoriu(file_name=None, file_path=None):
+    """
+    Creaza un inventoriu
+    param:
+        file_name - Denumirea fisierului cu obiecte
+        file_path - Unde se afla fisierul
+    return:
+        O variabila de tip inventory
+    """
     if file_path is None:
         while True:
             try:
@@ -165,6 +171,17 @@ def set_folder(inventory, new_path):
         return -1
     inventory['folder'] = getcwd()
     return 0
+
+
+def get_path(inventory):
+    """
+    Returneaza working directory
+    param:
+        inventory
+    return:
+        String cu pathul pentru working directory
+    """
+    return inventory['folder']
 
 
 def get_obj_IDs(inventory):
