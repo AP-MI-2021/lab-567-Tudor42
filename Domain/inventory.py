@@ -1,7 +1,7 @@
 from json.decoder import JSONDecodeError
 from Domain.object import *
 from json import loads, dumps
-from os import getcwd, chdir
+from os import getcwd, chdir, mkdir
 
 """
 Inventory:
@@ -19,20 +19,23 @@ def creaza_inventoriu(file_name=None, file_path=None):
     return:
         O variabila de tip inventory
     """
-    if file_path is None:
+    if file_path is None and getcwd()[-9:] != "DataFiles" and \
+       getcwd()[-15:] == "lab-567-Tudor42":
         while True:
             try:
-                file_path = getcwd()  # path to the folder where
-                # files are saved
-                file_path += "/DataFiles"
-                chdir(file_path)
+                chdir("./DataFiles")
                 break
-            except NotADirectoryError or OSError:
-                chdir("..")
+            except NotADirectoryError:
+                mkdir("./DataFiles")
+            except FileNotFoundError:
+                mkdir("./DataFiles")
+            except OSError:
+                print("Can't set up default folder")
     if file_name is not None:
         data = get_data(file_path + "/" + file_name)
     else:
         data = dict()
+    file_path = getcwd()
     return {
         'data': data,
         'folder': file_path
@@ -185,10 +188,44 @@ def get_path(inventory):
 
 
 def get_obj_IDs(inventory):
-    return inventory['data'].keys()
+    """
+    Returns the list of objects IDs
+    param:
+        inventory instance
+    return:
+        A list
+    """
+    return list(inventory['data'].keys())
 
 
 def get_obj_data(inventory, ID):
+    """
+    Get object data as object instance
+    param:
+        inventory instance
+        object's ID
+    return:
+        Object instance
+        Empty dictionary if object doesnt exist
+    """
+    if ID not in inventory['data'].keys():
+        return {}
+    return inventory['data'][ID]
+
+
+def get_obj_data_str(inventory, ID):
+    """
+    Get object data as string
+    param:
+        inventory instance
+        ID - object's ID
+    return:
+        A string of data on succes
+        If object with this ID doesnt exist
+        it returns an empty string
+    """
+    if ID not in inventory['data'].keys():
+        return ""
     obj = inventory['data'][ID]
     str = """-------------
     ID: {}
@@ -198,10 +235,3 @@ def get_obj_data(inventory, ID):
     Locatie: {}""".format(ID, obj["name"], obj["description"],
                           obj["price"], obj["location"])
     return str
-
-
-if __name__ == "__main__":
-    d = creaza_inventoriu('gg')
-    add_obj(d, 19, "oat", "pat", 120, "ddas")
-    modify_obj(d, 19, price=300)
-    save_data(d, "gg")

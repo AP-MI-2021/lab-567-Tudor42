@@ -10,9 +10,9 @@ Obiect:
 
 def creaza_obiect(object_id: int, name: str, description: str, price=None,
                   location=None):
-    if object_id == 0 or name == "" or description == "":
+    if object_id <= 0 or name == "" or description == "":
         raise ValueError("ID, nume si descriptia obiectului trebui sa fie"
-                         " nenule")
+                         " nenule, si ID nu trebuie sa fie negativ")
     if location is not None and len(location) != 4:
         raise ValueError("Locatia poate fi formata doar din "
                          "4 caractere")

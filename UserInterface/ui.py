@@ -1,6 +1,6 @@
 from Domain.inventory import creaza_inventoriu, set_folder, save_data, \
-                             get_data, get_obj_data, get_obj_IDs, add_obj, \
-                             delete_obj, get_path, modify_obj
+                             get_data, get_obj_data_str, get_obj_IDs, \
+                             add_obj, delete_obj, get_path, modify_obj
 
 
 def print_menu():
@@ -45,7 +45,7 @@ def loop():
         elif command[0] == "showall":
             keys = get_obj_IDs(inventory)
             for key in keys:
-                print(get_obj_data(inventory, key))
+                print(get_obj_data_str(inventory, key))
         elif command[0] == "add_obj":
             try:
                 ID = int(input("  ID: "))
