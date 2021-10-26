@@ -15,7 +15,7 @@ Cerinte:
     7. Undo.
 """
 import UserInterface.ui as ui
-import Tests.runTests as test
+import Tests.run_tests as test
 
 
 def main():
