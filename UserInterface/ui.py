@@ -1,7 +1,8 @@
 from Domain.inventory import creaza_inventoriu, set_folder, save_data, \
                              get_data, get_obj_data_str, get_obj_IDs, \
-                             add_obj, delete_obj, get_path, modify_obj
+                             get_path
 from Logic.inventory_logic import mutare_obiecte
+from Logic.CRUD import add_obj, delete_obj, modify_obj
 
 
 def print_menu():

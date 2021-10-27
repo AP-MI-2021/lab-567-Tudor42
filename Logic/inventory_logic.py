@@ -1,5 +1,6 @@
 import Domain.inventory as di
 import Domain.object as do
+import Logic.CRUD as cr
 
 
 def mutare_obiecte(inventory, old_location=None, new_location=None):
@@ -20,7 +21,7 @@ def mutare_obiecte(inventory, old_location=None, new_location=None):
     if new_location is not None and old_location is None:
         for key in di.get_obj_IDs(inventory):
             if do.get_location(di.get_obj_data(inventory, key)) is None:
-                di.modify_obj(inventory, key, location=new_location)
+                cr.modify_obj(inventory, key, location=new_location)
         return inventory
     if new_location is None:
         new_location = old_location
@@ -31,10 +32,10 @@ def mutare_obiecte(inventory, old_location=None, new_location=None):
         raise ValueError("Locatia noua trebuie sa contina 4 caractere")
     if old_location is None:
         for key in di.get_obj_IDs(inventory):
-            di.modify_obj(inventory, key, location=new_location)
+            cr.modify_obj(inventory, key, location=new_location)
     else:
         for key in di.get_obj_IDs(inventory):
             if do.get_location(di.get_obj_data(inventory, key)) == \
                old_location:
-                di.modify_obj(inventory, key, location=new_location)
+                cr.modify_obj(inventory, key, location=new_location)
     return inventory

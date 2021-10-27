@@ -1,5 +1,4 @@
 import Domain.object as do
-import Domain.inventory as di
 
 
 def test_obiect():
@@ -22,24 +21,3 @@ def test_obiect():
 
     do.set_location(obiect, "BBBB")
     assert do.get_location(obiect) == "BBBB"
-
-
-def test_inventory():
-    inventory = di.creaza_inventoriu()
-    assert di.get_obj_data_str(inventory, 10) == ""
-
-    di.add_obj(inventory, 10, "p", "x", 2, "aaaa")
-    assert di.get_obj_data_list(inventory, 10) == [10, "p", "x", 2,
-                                                   "aaaa"]
-
-    di.modify_obj(inventory, 10, description="K")
-    assert di.get_obj_data_list(inventory, 10) == [10, "p", "K", 2,
-                                                   "aaaa"]
-
-    di.delete_obj(inventory, 10)
-    assert di.get_obj_data_str(inventory, 10) == ""
-
-    di.add_obj(inventory, 14, "p", "x", 2, "aaaa")
-    di.add_obj(inventory, 21, "p", "x", 2, "aaaa")
-    di.add_obj(inventory, 32, "p", "x", 2, "aaaa")
-    assert di.get_obj_IDs(inventory) == [14, 21, 32]
