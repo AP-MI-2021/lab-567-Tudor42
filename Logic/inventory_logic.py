@@ -1,4 +1,5 @@
 import Domain.inventory as di
+import Domain.object as do
 
 
 def mutare_obiecte(inventory, old_location=None, new_location=None):
@@ -18,7 +19,7 @@ def mutare_obiecte(inventory, old_location=None, new_location=None):
         return inventory
     if new_location is not None and old_location is None:
         for key in di.get_obj_IDs(inventory):
-            if di.get_obj_data(inventory, key)['location'] is None:
+            if do.get_location(di.get_obj_data(inventory, key)) is None:
                 di.modify_obj(inventory, key, location=new_location)
         return inventory
     if new_location is None:
@@ -33,6 +34,7 @@ def mutare_obiecte(inventory, old_location=None, new_location=None):
             di.modify_obj(inventory, key, location=new_location)
     else:
         for key in di.get_obj_IDs(inventory):
-            if di.get_obj_data(inventory, key)['location'] == old_location:
+            if do.get_location(di.get_obj_data(inventory, key)) == \
+               old_location:
                 di.modify_obj(inventory, key, location=new_location)
     return inventory

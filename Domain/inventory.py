@@ -210,7 +210,7 @@ def get_obj_data_list(inventory, ID):
     """
     if ID not in inventory['data'].keys():
         return []
-    return list(get_obj_data(inventory, ID).values())
+    return list(get_obj_data(inventory, ID))
 
 
 def get_obj_data(inventory, ID):

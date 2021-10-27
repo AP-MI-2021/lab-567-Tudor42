@@ -20,58 +20,58 @@ def creaza_obiect(object_id: int, name: str, description: str, price=None,
         raise ValueError("Pretul trebuie sa fie numar")
     if price is None:
         price = 0
-    return {
-        "ID": object_id,
-        "name": name,
-        "description": description,
-        "price": price,
-        "location": location
-    }
+    return [
+        object_id,  # ID
+        name,  # Name
+        description,  # Description
+        price,  # price
+        location  # location
+    ]
 
 
 def get_ID(obj):
-    return obj["ID"]
+    return obj[0]
 
 
 def get_name(obj):
-    return obj["name"]
+    return obj[1]
 
 
 def get_description(obj):
-    return obj["description"]
+    return obj[2]
 
 
 def get_price(obj):
-    return obj["price"]
+    return obj[3]
 
 
 def get_location(obj):
-    return obj["location"]
+    return obj[4]
 
 
 def set_name(obj, name):
     if name == "":
         raise ValueError("Numele nu poate fi string gol")
-    obj["name"] = name
+    obj[1] = name
 
 
 def set_description(obj, description):
     if description == "":
         raise ValueError("Descriptia nu poate fi string gol")
-    obj["description"] = description
+    obj[2] = description
 
 
 def set_price(obj, price):
     if not isinstance(price, (float, int)):
         raise ValueError("Pretul trebuie sa fie numar")
-    obj["price"] = price
+    obj[3] = price
 
 
 def set_location(obj, location):
     if location is not None and len(location) != 4:
         raise ValueError("Locatia poate fi formata doar din "
                          "4 caractere")
-    obj["location"] = location
+    obj[4] = location
 
 
 if __name__ == "__main__":
