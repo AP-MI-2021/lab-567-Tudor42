@@ -29,12 +29,12 @@ def test_inventory():
     assert di.get_obj_data_str(inventory, 10) == ""
 
     di.add_obj(inventory, 10, "p", "x", 2, "aaaa")
-    assert list(di.get_obj_data(inventory, 10).values()) == [10, "p", "x", 2,
-                                                             "aaaa"]
+    assert di.get_obj_data_list(inventory, 10) == [10, "p", "x", 2,
+                                                   "aaaa"]
 
     di.modify_obj(inventory, 10, description="K")
-    assert list(di.get_obj_data(inventory, 10).values()) == [10, "p", "K", 2,
-                                                             "aaaa"]
+    assert di.get_obj_data_list(inventory, 10) == [10, "p", "K", 2,
+                                                   "aaaa"]
 
     di.delete_obj(inventory, 10)
     assert di.get_obj_data_str(inventory, 10) == ""
