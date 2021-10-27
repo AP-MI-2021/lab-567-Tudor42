@@ -82,7 +82,10 @@ def get_data(file_name="swap.json", inventory=None):
     d = dict()
     try:
         for value in loads(open(file_name, "r").read()).values():
-            d[value["ID"]] = value
+            d[value["ID"]] = creaza_obiect(value["ID"], value["name"],
+                                           value["description"],
+                                           value["price"],
+                                           value["location"])
         if inventory is not None:
             inventory['data'] = d
     except JSONDecodeError:
@@ -247,6 +250,6 @@ def get_obj_data_str(inventory, ID):
     Nume: {}
     Descriptie: {}
     Pret: {}
-    Locatie: {}""".format(ID, obj["name"], obj["description"],
-                          obj["price"], obj["location"])
+    Locatie: {}""".format(ID, get_name(obj), get_description(obj),
+                          get_price(obj), get_location(obj))
     return str
