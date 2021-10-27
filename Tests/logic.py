@@ -9,7 +9,6 @@ def test_mutare():
     inv.add_obj(inventory, 20, "L", "L", 12, "llll")
     inv.add_obj(inventory, 21, "L", "L", 12, "LLLL")
     inv.add_obj(inventory, 22, "L", "L", 12, "llll")
-
     inventory = invl.mutare_obiecte(inventory, "LLLL", "aaaa")
     assert list(inv.get_obj_data(inventory, 19).values()) == [19, "L", "L", 12,
                                                               "aaaa"]

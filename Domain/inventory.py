@@ -1,95 +1,18 @@
-from json.decoder import JSONDecodeError
 from Domain.object import *
-from json import loads, dumps
-from os import getcwd, chdir, mkdir
 
 """
 Inventory:
-    data - dictionary of objects
-    folder - path to saved files
+    data - list of objects
 """
 
 
-def creaza_inventoriu(file_name=None, file_path=None):
+def creaza_inventoriu():
     """
     Creaza un inventoriu
-    param:
-        file_name - Denumirea fisierului cu obiecte
-        file_path - Unde se afla fisierul
     return:
         O variabila de tip inventory
     """
-    if file_path is None and getcwd()[-9:] != "DataFiles" and \
-       getcwd()[-15:] == "lab-567-Tudor42":
-        while True:
-            try:
-                chdir("./DataFiles")
-                break
-            except NotADirectoryError:
-                mkdir("./DataFiles")
-            except FileNotFoundError:
-                mkdir("./DataFiles")
-            except OSError:
-                print("Can't set up default folder")
-    if file_name is not None:
-        data = get_data(file_path + "/" + file_name)
-    else:
-        data = dict()
-    file_path = getcwd()
-    return {
-        'data': data,
-        'folder': file_path
-    }
-
-
-def save_data(inventory, file_name="swap.json"):
-    """
-    Save invetory data in a file for later use
-    param:
-        inventory instance
-        file_name
-    return:
-        -1 - if fails
-        0 - if succeds
-    """
-    if file_name[-5:] != ".json":
-        file_name += ".json"
-    file_name = inventory['folder'] + "/" + file_name
-    d = dict()  # dictionary for serialization
-    n = 1
-    for obj in inventory['data'].values():
-        d[n] = obj
-        n += 1
-    try:
-        with open(file_name, "w") as fout:
-            fout.write(dumps(d))
-    except FileNotFoundError as err:
-        print(err)
-        return -1
-    return 0
-
-
-def get_data(file_name="swap.json", inventory=None):
-    """
-    Get inventory data from file
-    param:
-        inventory - inventory instance
-    return:
-        A dictionary of objects
-    """
-    if file_name[-5:] != ".json":
-        file_name += ".json"
-    d = dict()
-    try:
-        for value in loads(open(file_name, "r").read()).values():
-            d[value["ID"]] = value
-        if inventory is not None:
-            inventory['data'] = d
-    except JSONDecodeError:
-        pass
-    except FileNotFoundError:
-        open(file_name, "w")
-    return d
+    return list()
 
 
 def add_obj(inventory, ID, name, description, price=None, location=None):
@@ -106,11 +29,11 @@ def add_obj(inventory, ID, name, description, price=None, location=None):
         -2 - ID dublicate
         -1 - Invalid object params
     """
-    if ID in inventory['data'].keys():
+    if ID in get_obj_IDs(inventory):
         return -2
     try:
-        inventory['data'][ID] = creaza_obiect(ID, name,
-                                              description, price, location)
+        inventory.append(creaza_obiect(ID, name,
+                                       description, price, location))
     except ValueError as ve:
         print(ve)
         return -1
@@ -123,14 +46,18 @@ def delete_obj(inventory, ID):
     param:
         ID - object id
     return:
-        1 - successful operation
-        -1 - delete error
+        Modified inventory on succes
         -2 - object with such ID doesnt exist
     """
-    if ID not in inventory['data'].keys():
+    if ID not in get_obj_IDs(inventory):
         return -2
-    inventory['data'].pop(ID)
-    return 1
+    m = -1
+    for i in range(len(inventory)):
+        if ID == get_ID(inventory[i]):
+            m = i
+            break
+    del inventory[m]
+    return inventory
 
 
 def modify_obj(inventory, ID, name=None, description=None, price=None,
@@ -139,52 +66,30 @@ def modify_obj(inventory, ID, name=None, description=None, price=None,
     Modify an object
     param:
     return:
-        1 - successful operation
+        Modified inventory - successful operation
         -2 - object with such ID doesnt exist
         -1 - invalid input
     """
-    if ID not in inventory['data'].keys():
+    if ID not in get_obj_IDs(inventory):
         return -2
+    m = 0
+    for i in range(len(inventory)):
+        if ID == get_ID(inventory[i]):
+            m = i
+            break
     try:
         if name is not None:
-            set_name(inventory['data'][ID], name)
+            set_name(inventory[m], name)
         if description is not None:
-            set_description(inventory['data'][ID], description)
+            set_description(inventory[m], description)
         if price is not None:
-            set_price(inventory['data'][ID], price)
+            set_price(inventory[m], price)
         if location is not None:
-            set_location(inventory['data'][ID], location)
+            set_location(inventory[m], location)
     except ValueError as ve:
         print(ve)
         return -1
-    return 1
-
-
-def set_folder(inventory, new_path):
-    try:
-        chdir(new_path)
-    except NotADirectoryError as err:
-        print(err)
-        return -1
-    except OSError as err:
-        print(err)
-        return -1
-    except FileNotFoundError as err:
-        print(err)
-        return -1
-    inventory['folder'] = getcwd()
-    return 0
-
-
-def get_path(inventory):
-    """
-    Returneaza working directory
-    param:
-        inventory
-    return:
-        String cu pathul pentru working directory
-    """
-    return inventory['folder']
+    return inventory
 
 
 def get_obj_IDs(inventory):
@@ -195,7 +100,10 @@ def get_obj_IDs(inventory):
     return:
         A list
     """
-    return list(inventory['data'].keys())
+    res_lst = []
+    for obj in inventory:
+        res_lst.append(get_ID(obj))
+    return res_lst
 
 
 def get_obj_data(inventory, ID):
@@ -208,9 +116,14 @@ def get_obj_data(inventory, ID):
         Object instance
         Empty dictionary if object doesnt exist
     """
-    if ID not in inventory['data'].keys():
+    if ID not in get_obj_IDs(inventory):
         return {}
-    return inventory['data'][ID]
+    m = 0
+    for i in range(len(inventory)):
+        if ID == get_ID(inventory[i]):
+            m = i
+            break
+    return inventory[m]
 
 
 def get_obj_data_str(inventory, ID):
@@ -224,9 +137,13 @@ def get_obj_data_str(inventory, ID):
         If object with this ID doesnt exist
         it returns an empty string
     """
-    if ID not in inventory['data'].keys():
+    if ID not in get_obj_IDs(inventory):
         return ""
-    obj = inventory['data'][ID]
+    for i in range(len(inventory)):
+        if ID == get_ID(inventory[i]):
+            m = i
+            break
+    obj = inventory[m]
     str = """-------------
     ID: {}
     Nume: {}

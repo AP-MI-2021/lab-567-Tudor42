@@ -1,20 +1,19 @@
-from Domain.inventory import creaza_inventoriu, set_folder, save_data, \
-                             get_data, get_obj_data_str, get_obj_IDs, \
-                             add_obj, delete_obj, get_path, modify_obj
+from Domain.inventory import creaza_inventoriu, \
+                             get_obj_data_str, get_obj_IDs, \
+                             add_obj, delete_obj, modify_obj
+from Logic.inventory_logic import mutare_obiecte
 
 
 def print_menu():
     print("""  help - prints the menu
-  cd [path] - change the folder for opening and saving files
-  pwd - print working directory
-  save [file] - saves inventory in file if no argument is given
-    it get saved in swap.json
-  open [file] - get inventory data from the file if no argument is
-    given it gets data form swap.json
+
   showall - shows all objects in inventory
   add_obj - adds an object
   delete_obj [ID] - deletes an object by its ID
   modify_obj [ID] - modifies an object by its ID
+  mutare_obj [old_location] [new_location] - modifies location of objects
+    with old_location to new_location if old_location is not given then
+    all objects comute
   exit - to terminate the console\n""")
 
 
@@ -22,26 +21,8 @@ def loop():
     inventory = creaza_inventoriu()
     while True:
         command = input('$').split()
-        if command[0] == 'cd':
-            if len(command) < 2:
-                print("Path isnt specified")
-                continue
-            if not set_folder(inventory, command[1]):
-                print(get_path(inventory))
-        elif command[0] == "pwd":
-            print(get_path(inventory))
-        elif command[0] == "help":
+        if command[0] == "help":
             print_menu()
-        elif command[0] == "save":
-            if len(command) < 2:
-                save_data(inventory)
-            else:
-                save_data(inventory, command[1])
-        elif command[0] == "open":
-            if len(command) >= 2:
-                get_data(command[1], inventory)
-            else:
-                get_data(inventory=inventory)
         elif command[0] == "showall":
             keys = get_obj_IDs(inventory)
             for key in keys:
@@ -108,6 +89,13 @@ def loop():
                 n = modify_obj(inventory, command[1], location=option)
             if n == -2:
                 print("An object with this ID doesnt exist")
+        elif command[0] == "mutare_obj":
+            if len(command) == 2:
+                inventory = mutare_obiecte(inventory, command[1])
+            elif len(command) == 3:
+                inventory = mutare_obiecte(inventory, command[1], command[2])
+            else:
+                print("Wrong number of arguments")
         elif command[0] == "exit":
             break
         else:
