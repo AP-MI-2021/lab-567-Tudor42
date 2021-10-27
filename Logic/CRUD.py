@@ -67,3 +67,68 @@ def modify_obj(inventory, ID, name=None, description=None, price=None,
         print(ve)
         return -1
     return 1
+
+
+def get_obj_IDs(inventory):
+    """
+    Returns the list of objects IDs
+    param:
+        inventory instance
+    return:
+        A list
+    """
+    return list(inventory['data'].keys())
+
+
+def get_obj_data_list(inventory, ID):
+    """
+    Get object data as object instance
+    param:
+        inventory instance
+        object's ID
+    return:
+        Return obj as a list
+        Empty list if object doesnt exist
+    """
+    if ID not in inventory['data'].keys():
+        return []
+    return list(get_obj_data(inventory, ID))
+
+
+def get_obj_data(inventory, ID):
+    """
+    Get object data as object instance
+    param:
+        inventory instance
+        object's ID
+    return:
+        Object instance
+        Empty dictionary if object doesnt exist
+    """
+    if ID not in inventory['data'].keys():
+        return {}
+    return inventory['data'][ID]
+
+
+def get_obj_data_str(inventory, ID):
+    """
+    Get object data as string
+    param:
+        inventory instance
+        ID - object's ID
+    return:
+        A string of data on succes
+        If object with this ID doesnt exist
+        it returns an empty string
+    """
+    if ID not in inventory['data'].keys():
+        return ""
+    obj = inventory['data'][ID]
+    str = """-------------
+    ID: {}
+    Nume: {}
+    Descriptie: {}
+    Pret: {}
+    Locatie: {}""".format(ID, get_name(obj), get_description(obj),
+                          get_price(obj), get_location(obj))
+    return str

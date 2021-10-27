@@ -19,8 +19,8 @@ def mutare_obiecte(inventory, old_location=None, new_location=None):
     if old_location is None and new_location is None:
         return inventory
     if new_location is not None and old_location is None:
-        for key in di.get_obj_IDs(inventory):
-            if do.get_location(di.get_obj_data(inventory, key)) is None:
+        for key in cr.get_obj_IDs(inventory):
+            if do.get_location(cr.get_obj_data(inventory, key)) is None:
                 cr.modify_obj(inventory, key, location=new_location)
         return inventory
     if new_location is None:
@@ -31,11 +31,11 @@ def mutare_obiecte(inventory, old_location=None, new_location=None):
     if len(new_location) != 4:
         raise ValueError("Locatia noua trebuie sa contina 4 caractere")
     if old_location is None:
-        for key in di.get_obj_IDs(inventory):
+        for key in cr.get_obj_IDs(inventory):
             cr.modify_obj(inventory, key, location=new_location)
     else:
-        for key in di.get_obj_IDs(inventory):
-            if do.get_location(di.get_obj_data(inventory, key)) == \
+        for key in cr.get_obj_IDs(inventory):
+            if do.get_location(cr.get_obj_data(inventory, key)) == \
                old_location:
                 cr.modify_obj(inventory, key, location=new_location)
     return inventory
