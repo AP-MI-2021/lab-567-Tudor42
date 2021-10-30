@@ -1,8 +1,8 @@
 from Domain.inventory import creaza_inventoriu, set_folder, save_data, \
                              get_data, get_path
-from Logic.inventory_logic import mutare_obiecte
 from Logic.CRUD import add_obj, delete_obj, modify_obj, \
-                       get_obj_data_str, get_obj_IDs
+                       get_obj_data_str, get_obj_IDs, \
+                       mutare_obiecte, add_description
 
 
 def print_menu():
@@ -17,6 +17,10 @@ def print_menu():
   add_obj - adds an object
   delete_obj [ID] - deletes an object by its ID
   modify_obj [ID] - modifies an object by its ID
+  mutare_objs [old location] [new location] - if only one param is given then
+    all objects' locations will be set to this param
+  add_description - concatenate a string to every description of objects
+    with price bigger than a given number
   exit - to terminate the console\n""")
 
 
@@ -111,20 +115,31 @@ def loop():
                 option = input("Description: ")
                 n = modify_obj(inventory, command[1], description=option)
             elif x == "3":
-                option = input("Price: ")
+                try:
+                    option = int(input("Price: "))
+                except ValueError:
+                    option = ""
                 n = modify_obj(inventory, command[1], price=option)
             elif x == "4":
                 option = input("Location: ")
                 n = modify_obj(inventory, command[1], location=option)
             if n == -2:
                 print("An object with this ID doesnt exist")
-        elif command[0] == "mutare_obj":
+        elif command[0] == "mutare_objs":
             if len(command) == 2:
                 inventory = mutare_obiecte(inventory, command[1])
             elif len(command) == 3:
                 inventory = mutare_obiecte(inventory, command[1], command[2])
             else:
                 print("Wrong number of arguments")
+        elif command[0] == "add_description":
+            try:
+                n = int(input("Lower bound price: "))
+            except ValueError:
+                print("Lower bound must be an integer")
+                continue
+            str = input("Description: ")
+            inventory = add_description(inventory, n, str)
         elif command[0] == "exit":
             break
         else:
