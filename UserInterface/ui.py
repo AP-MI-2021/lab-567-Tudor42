@@ -2,7 +2,8 @@ from Domain.inventory import creaza_inventoriu, set_folder, save_data, \
                              get_data, get_path
 from Logic.CRUD import add_obj, delete_obj, modify_obj, \
                        get_obj_data_str, get_obj_IDs, \
-                       mutare_obiecte, add_description
+                       mutare_obiecte, add_description, \
+                       get_max_price_per_location
 
 
 def print_menu():
@@ -21,6 +22,7 @@ def print_menu():
     all objects' locations will be set to this param
   add_description - concatenate a string to every description of objects
     with price bigger than a given number
+  max_price_per_location - shows the biggest price of objects in every location
   exit - to terminate the console\n""")
 
 
@@ -140,6 +142,10 @@ def loop():
                 continue
             str = input("Description: ")
             inventory = add_description(inventory, n, str)
+        elif command[0] == "max_price_per_location":
+            res = get_max_price_per_location(inventory)
+            for loc in res:
+                print(loc + ":", res[loc])
         elif command[0] == "exit":
             break
         else:

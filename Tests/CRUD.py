@@ -102,3 +102,25 @@ def test_add_description():
         else:
             assert cr.get_description(cr.get_obj_data(inventory, obj)) == \
                 "L"
+
+
+def test_get_max_price_per_location():
+    inventory = iv.creaza_inventoriu()
+
+    cr.add_obj(inventory, 19, "L", "L", 8, "aaaa")
+    cr.add_obj(inventory, 20, "L", "l", 16, "bbbb")
+    cr.add_obj(inventory, 21, "L", "L", 10, "cccc")
+    cr.add_obj(inventory, 22, "L", "l", 123, "dddd")
+
+    d = {"aaaa": 8, "bbbb": 16, "cccc": 10, "dddd": 123}
+
+    assert cr.get_max_price_per_location(inventory) == d
+
+    cr.add_obj(inventory, 23, "L", "L", 10, "aaaa")
+    cr.add_obj(inventory, 24, "L", "l", 14, "bbbb")
+    cr.add_obj(inventory, 25, "L", "L", 18, "cccc")
+    cr.add_obj(inventory, 26, "L", "l", 2, "dddd")
+
+    d = {"aaaa": 10, "bbbb": 16, "cccc": 18, "dddd": 123}
+
+    assert cr.get_max_price_per_location(inventory) == d

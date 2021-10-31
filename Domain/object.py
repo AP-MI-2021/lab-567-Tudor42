@@ -20,6 +20,8 @@ def creaza_obiect(object_id: int, name: str, description: str, price=None,
         raise ValueError("Pretul trebuie sa fie numar")
     if price is None:
         price = 0
+    if price < 0:
+        raise ValueError("Pretul nu poate fi negativ")
     return [
         object_id,  # ID
         name,  # Name

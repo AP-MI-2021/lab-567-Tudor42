@@ -11,3 +11,4 @@ def run_tests():
     td.test_obiect()
     cr.test_mutare()
     cr.test_add_description()
+    cr.test_get_max_price_per_location()

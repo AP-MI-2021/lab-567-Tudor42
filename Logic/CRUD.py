@@ -188,3 +188,21 @@ def add_description(inventory, n, text):
             s = get_description(o) + text
             modify_obj(inventory, obj, description=s)
     return inventory
+
+
+def get_max_price_per_location(inventory):
+    """
+    Gets the max price per location
+    param inventory: inventory instance
+    return: A dictionary with key representing
+      the location and value represents the max price
+    """
+    res = dict()
+    for i in get_obj_IDs(inventory):
+        obj = get_obj_data(inventory, i)
+        if get_location(obj) not in res.keys():
+            res[get_location(obj)] = get_price(obj)
+        else:
+            if res[get_location(obj)] < get_price(obj):
+                res[get_location(obj)] = get_price(obj)
+    return res
