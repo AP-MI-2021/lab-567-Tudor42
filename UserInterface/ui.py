@@ -3,7 +3,8 @@ from Domain.inventory import creaza_inventoriu, set_folder, save_data, \
 from Logic.CRUD import add_obj, delete_obj, modify_obj, \
                        get_obj_data_str, get_obj_IDs, \
                        mutare_obiecte, add_description, \
-                       get_max_price_per_location
+                       get_max_price_per_location, \
+                       sort_invetory_by_price
 
 
 def print_menu():
@@ -146,6 +147,8 @@ def loop():
             res = get_max_price_per_location(inventory)
             for loc in res:
                 print(loc + ":", res[loc])
+        elif command[0] == "sort_by_price":
+            inventory = sort_invetory_by_price(inventory)
         elif command[0] == "exit":
             break
         else:

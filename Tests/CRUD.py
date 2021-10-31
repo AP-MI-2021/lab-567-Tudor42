@@ -124,3 +124,21 @@ def test_get_max_price_per_location():
     d = {"aaaa": 10, "bbbb": 16, "cccc": 18, "dddd": 123}
 
     assert cr.get_max_price_per_location(inventory) == d
+
+
+def test_sort_invetory_by_price():
+    inventory_unsorted = iv.creaza_inventoriu()
+    inventory_sorted = iv.creaza_inventoriu()
+
+    cr.add_obj(inventory_unsorted, 19, "L", "L", 8, "aaaa")
+    cr.add_obj(inventory_unsorted, 20, "L", "l", 16, "bbbb")
+    cr.add_obj(inventory_unsorted, 21, "L", "L", 10, "cccc")
+    cr.add_obj(inventory_unsorted, 22, "L", "l", 1, "dddd")
+
+    cr.add_obj(inventory_sorted, 22, "L", "l", 1, "dddd")
+    cr.add_obj(inventory_sorted, 19, "L", "L", 8, "aaaa")
+    cr.add_obj(inventory_sorted, 21, "L", "L", 10, "cccc")
+    cr.add_obj(inventory_sorted, 20, "L", "l", 16, "bbbb")
+
+    inventory_unsorted = cr.sort_invetory_by_price(inventory_unsorted)
+    assert inventory_sorted == inventory_unsorted

@@ -12,3 +12,4 @@ def run_tests():
     cr.test_mutare()
     cr.test_add_description()
     cr.test_get_max_price_per_location()
+    cr.test_sort_invetory_by_price()

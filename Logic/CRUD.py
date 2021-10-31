@@ -1,4 +1,13 @@
+from Domain.inventory import get_path
 from Domain.object import *
+
+
+def get_objs(invetory):
+    """
+    param inventory: inventory instance
+    return: inventory objects
+    """
+    return invetory["data"]
 
 
 def add_obj(inventory, ID, name, description, price=None, location=None):
@@ -206,3 +215,16 @@ def get_max_price_per_location(inventory):
             if res[get_location(obj)] < get_price(obj):
                 res[get_location(obj)] = get_price(obj)
     return res
+
+
+def sort_invetory_by_price(inventory):
+    """
+    Sorts objects in inventory by their price
+    param inventory: inventory instance
+    return: sorted inventory
+    """
+    return {
+        'data': dict(sorted(get_objs(inventory).items(),
+                            key=lambda x: get_price(x[1]))),
+        'folder': get_path(inventory)
+    }
