@@ -1,10 +1,10 @@
 from Domain.inventory import creaza_inventoriu, set_folder, save_data, \
                              get_data, get_path
 from Logic.CRUD import add_obj, delete_obj, modify_obj, \
-                       get_obj_data_str, get_obj_IDs, \
-                       mutare_obiecte, add_description, \
-                       get_max_price_per_location, \
-                       sort_invetory_by_price
+                       get_obj_data_str, get_obj_IDs
+from Logic.functionalities import mutare_obiecte, add_description, \
+                                  get_max_price_per_location, \
+                                  sort_invetory_by_price
 
 
 def print_menu():

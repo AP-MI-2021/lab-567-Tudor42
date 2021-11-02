@@ -1,5 +1,6 @@
 import Tests.domain as td
 import Tests.CRUD as cr
+import Tests.functionalities as fn
 
 
 def run_tests():
@@ -9,7 +10,7 @@ def run_tests():
     cr.test_get_obj_data_list()
     cr.test_get_obj_IDs()
     td.test_obiect()
-    cr.test_mutare()
-    cr.test_add_description()
-    cr.test_get_max_price_per_location()
-    cr.test_sort_invetory_by_price()
+    fn.test_mutare()
+    fn.test_add_description()
+    fn.test_get_max_price_per_location()
+    fn.test_sort_invetory_by_price()
