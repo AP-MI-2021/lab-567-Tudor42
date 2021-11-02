@@ -5,7 +5,8 @@ from Logic.CRUD import add_obj, delete_obj, modify_obj, \
                        get_obj_data
 from Logic.functionalities import mutare_obiecte, add_description, \
                                   get_max_price_per_location, \
-                                  sort_invetory_by_price
+                                  sort_invetory_by_price, \
+                                  get_price_sum_per_location
 from Domain.object import get_ID, get_name, get_price
 
 
@@ -27,6 +28,7 @@ def print_menu():
     with price bigger than a given number
   max_price_per_location - shows the biggest price of objects in every location
   sort_by_price - sorts objects by their price
+  sum_price - shows sum of prices of objects grouped by their location
   exit - to terminate the console\n""")
 
 
@@ -156,6 +158,10 @@ def loop():
                 obj = get_obj_data(inventory, id)
                 print("ID:", get_ID(obj), " Nume:", get_name(obj),
                       " Pret:", get_price(obj))
+        elif command[0] == "sum_price":
+            res = get_price_sum_per_location(inventory)
+            for loc in res:
+                print(loc + ":", res[loc])
         elif command[0] == "exit":
             break
         else:

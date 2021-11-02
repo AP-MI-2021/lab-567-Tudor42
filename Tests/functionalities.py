@@ -89,3 +89,23 @@ def test_sort_invetory_by_price():
 
     inventory_unsorted = fn.sort_invetory_by_price(inventory_unsorted)
     assert inventory_sorted == inventory_unsorted
+
+
+def test_get_price_sum_per_location():
+    inventory = iv.creaza_inventoriu()
+
+    cr.add_obj(inventory, 19, "L", "L", 8, "aaaa")
+    cr.add_obj(inventory, 20, "L", "l", 16, "bbbb")
+    cr.add_obj(inventory, 21, "L", "L", 10, "cccc")
+    cr.add_obj(inventory, 22, "L", "l", 123, "dddd")
+
+    res = {"aaaa": 8, "bbbb": 16, "cccc": 10, "dddd": 123}
+    assert res == fn.get_price_sum_per_location(inventory)
+
+    cr.add_obj(inventory, 23, "L", "L", 10, "aaaa")
+    cr.add_obj(inventory, 24, "L", "l", 14, "bbbb")
+    cr.add_obj(inventory, 25, "L", "L", 18, "eeee")
+    cr.add_obj(inventory, 26, "L", "l", 2, "dddd")
+
+    res = {"aaaa": 18, "bbbb": 30, "cccc": 10, "dddd": 125, "eeee": 18}
+    assert res == fn.get_price_sum_per_location(inventory)

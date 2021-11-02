@@ -14,3 +14,4 @@ def run_tests():
     fn.test_add_description()
     fn.test_get_max_price_per_location()
     fn.test_sort_invetory_by_price()
+    fn.test_get_price_sum_per_location()

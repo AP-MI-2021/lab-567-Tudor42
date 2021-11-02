@@ -17,27 +17,31 @@ def mutare_obiecte(inventory, old_location=None, new_location=None):
     """
     if old_location is None and new_location is None:
         return inventory
-    if new_location is not None and old_location is None:
-        for key in get_obj_IDs(inventory):
-            if get_location(get_obj_data(inventory, key)) is None:
+    try:
+        if new_location is not None and old_location is None:
+            for key in get_obj_IDs(inventory):
+                if get_location(get_obj_data(inventory, key)) is None:
+                    modify_obj(inventory, key, location=new_location)
+            return inventory
+        if new_location is None:
+            new_location = old_location
+            old_location = None
+        if old_location is not None and len(old_location) != 4:
+            return inventory
+        if len(new_location) != 4:
+            raise ValueError("Locatia noua trebuie sa contina 4 caractere")
+        if old_location is None:
+            for key in get_obj_IDs(inventory):
                 modify_obj(inventory, key, location=new_location)
+        else:
+            for key in get_obj_IDs(inventory):
+                if get_location(get_obj_data(inventory, key)) == \
+                   old_location:
+                    modify_obj(inventory, key, location=new_location)
         return inventory
-    if new_location is None:
-        new_location = old_location
-        old_location = None
-    if old_location is not None and len(old_location) != 4:
+    except ValueError as ve:
+        print(ve)
         return inventory
-    if len(new_location) != 4:
-        raise ValueError("Locatia noua trebuie sa contina 4 caractere")
-    if old_location is None:
-        for key in get_obj_IDs(inventory):
-            modify_obj(inventory, key, location=new_location)
-    else:
-        for key in get_obj_IDs(inventory):
-            if get_location(get_obj_data(inventory, key)) == \
-               old_location:
-                modify_obj(inventory, key, location=new_location)
-    return inventory
 
 
 def add_description(inventory, n, text):
@@ -87,3 +91,20 @@ def sort_invetory_by_price(inventory):
                             key=lambda x: get_price(x[1]))),
         'folder': get_path(inventory)
     }
+
+
+def get_price_sum_per_location(inventory):
+    """
+    Gets the sum of prices per location
+    param inventory: inventory instance
+    return: A dictionary with key representing
+      the location and value represents the sum
+    """
+    res = dict()
+    for i in get_obj_IDs(inventory):
+        obj = get_obj_data(inventory, i)
+        if get_location(obj) not in res.keys():
+            res[get_location(obj)] = get_price(obj)
+        else:
+            res[get_location(obj)] += get_price(obj)
+    return res
