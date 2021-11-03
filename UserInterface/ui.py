@@ -1,13 +1,5 @@
-from Domain.inventory import creaza_inventoriu, set_folder, save_data, \
-                             get_data, get_path
-from Logic.CRUD import add_obj, delete_obj, modify_obj, \
-                       get_obj_data_str, get_obj_IDs, \
-                       get_obj_data
-from Logic.functionalities import mutare_obiecte, add_description, \
-                                  get_max_price_per_location, \
-                                  sort_invetory_by_price, \
-                                  get_price_sum_per_location
-from Domain.object import get_ID, get_name, get_price
+from Domain.inventory import creaza_inventoriu, get_path
+from UserInterface.command import *
 
 
 def print_menu():
@@ -39,129 +31,33 @@ def loop():
         if len(command) == 0:
             continue
         if command[0] == 'cd':
-            if len(command) < 2:
-                print("Path isnt specified")
-                continue
-            if not set_folder(inventory, command[1]):
-                print(get_path(inventory))
+            cd_c(command, inventory)
         elif command[0] == "pwd":
             print(get_path(inventory))
         elif command[0] == "help":
             print_menu()
         elif command[0] == "save":
-            if len(command) < 2:
-                save_data(inventory)
-                print("Saved in folder: " + get_path(inventory))
-                print("File: swap.json")
-            else:
-                save_data(inventory, command[1])
-                print("Saved in folder: " + get_path(inventory))
-                if command[1][-5:] != ".json":
-                    command[1] += ".json"
-                print("File: " + command[1])
+            save_c(command, inventory)
         elif command[0] == "open":
-            if len(command) >= 2:
-                get_data(command[1], inventory)
-            else:
-                get_data(inventory=inventory)
+            open_c(command, inventory)
         elif command[0] == "showall":
-            keys = get_obj_IDs(inventory)
-            for key in keys:
-                print(get_obj_data_str(inventory, key))
+            showall_c(command, inventory)
         elif command[0] == "add_obj":
-            try:
-                ID = int(input("  ID: "))
-            except ValueError:
-                print("ID is a number")
-                continue
-            name = input("  Name: ").strip()
-            description = input("  Description: ").strip()
-            try:
-                price = int(input("  Price: "))
-            except ValueError:
-                print("  Price should be a number")
-                continue
-            location = input("  Location: ").strip()
-            flag = add_obj(inventory, ID, name, description, price, location)
-            if flag == 0:
-                print("Object was added successfully")
-            elif flag == -2:
-                print("ID dublicate")
+            add_obj_c(command, inventory)
         elif command[0] == "delete_obj":
-            if len(command) < 2:
-                try:
-                    ID = int(input("  ID: "))
-                except ValueError:
-                    print("ID is a number")
-                    continue
-                delete_obj(inventory, ID)
-            else:
-                for i in command[1:]:
-                    try:
-                        delete_obj(inventory, int(i))
-                    except ValueError:
-                        print(i, " is not a number")
+            delete_obj_c(command, inventory)
         elif command[0] == "modify_obj":
-            if len(command) < 2:
-                print("ID missing")
-                continue
-            str = "1. Name"
-            str += "    2. Description"
-            str += "    3. Price"
-            str += "    4. Location\n"
-            str += "Your option: "
-            x = input(str)
-            try:
-                command[1] = int(command[1])
-            except ValueError:
-                print("ID should be a number")
-                continue
-            if x == "1":
-                option = input("Name: ")
-                n = modify_obj(inventory, command[1], name=option)
-            elif x == "2":
-                option = input("Description: ")
-                n = modify_obj(inventory, command[1], description=option)
-            elif x == "3":
-                try:
-                    option = int(input("Price: "))
-                except ValueError:
-                    option = ""
-                n = modify_obj(inventory, command[1], price=option)
-            elif x == "4":
-                option = input("Location: ")
-                n = modify_obj(inventory, command[1], location=option)
-            if n == -2:
-                print("An object with this ID doesnt exist")
+            modify_obj_c(command, inventory)
         elif command[0] == "mutare_objs":
-            if len(command) == 2:
-                inventory = mutare_obiecte(inventory, command[1])
-            elif len(command) == 3:
-                inventory = mutare_obiecte(inventory, command[1], command[2])
-            else:
-                print("Wrong number of arguments")
+            mutare_objs_c(command, inventory)
         elif command[0] == "add_description":
-            try:
-                n = int(input("Lower bound price: "))
-            except ValueError:
-                print("Lower bound must be an integer")
-                continue
-            str = input("Description: ")
-            inventory = add_description(inventory, n, str)
+            add_description_c(command, inventory)
         elif command[0] == "max_price_per_location":
-            res = get_max_price_per_location(inventory)
-            for loc in res:
-                print(loc + ":", res[loc])
+            max_price_per_location_c(command, inventory)
         elif command[0] == "sort_by_price":
-            inventory = sort_invetory_by_price(inventory)
-            for id in get_obj_IDs(inventory):
-                obj = get_obj_data(inventory, id)
-                print("ID:", get_ID(obj), " Nume:", get_name(obj),
-                      " Pret:", get_price(obj))
+            inventory = sort_by_price_c(command, inventory)
         elif command[0] == "sum_price":
-            res = get_price_sum_per_location(inventory)
-            for loc in res:
-                print(loc + ":", res[loc])
+            sum_price_c(command, inventory)
         elif command[0] == "exit":
             break
         else:
