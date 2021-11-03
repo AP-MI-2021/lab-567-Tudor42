@@ -20,7 +20,7 @@ def add_obj(inventory, ID, name, description, price=None, location=None):
         price
         location - object location
     return:
-        1 - object added successfully
+        0 - object added successfully
         -2 - ID dublicate
         -1 - Invalid object params
     """
@@ -32,7 +32,7 @@ def add_obj(inventory, ID, name, description, price=None, location=None):
     except ValueError as ve:
         print(ve)
         return -1
-    return 1
+    return 0
 
 
 def delete_obj(inventory, ID):
@@ -41,14 +41,14 @@ def delete_obj(inventory, ID):
     param:
         ID - object id
     return:
-        1 - successful operation
+        0 - successful operation
         -1 - delete error
         -2 - object with such ID doesnt exist
     """
     if ID not in inventory['data'].keys():
         return -2
     inventory['data'].pop(ID)
-    return 1
+    return 0
 
 
 def modify_obj(inventory, ID, name=None, description=None, price=None,
@@ -57,7 +57,7 @@ def modify_obj(inventory, ID, name=None, description=None, price=None,
     Modify an object
     param:
     return:
-        1 - successful operation
+        0 - successful operation
         -2 - object with such ID doesnt exist
         -1 - invalid input
     """
@@ -75,7 +75,7 @@ def modify_obj(inventory, ID, name=None, description=None, price=None,
     except ValueError as ve:
         print(ve)
         return -1
-    return 1
+    return 0
 
 
 def get_obj_IDs(inventory):
