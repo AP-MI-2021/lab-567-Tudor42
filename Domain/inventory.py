@@ -92,12 +92,12 @@ def get_data(file_name="swap.json", inventory=None):
                                            value["description"],
                                            value["price"],
                                            value["location"])
-        if inventory is not None:
-            inventory['data'] = d
     except JSONDecodeError:
         pass
     except FileNotFoundError:
         open(file_name, "w")
+    if inventory is not None:
+        inventory['data'] = d
     return d
 
 
