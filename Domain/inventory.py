@@ -2,6 +2,7 @@ from json.decoder import JSONDecodeError
 from Domain.object import *
 from json import loads, dumps
 from os import getcwd, chdir, mkdir
+from copy import deepcopy
 
 """
 Inventory:
@@ -38,8 +39,51 @@ def creaza_inventoriu(file_name=None, file_path=None):
     file_path = getcwd()
     return {
         'data': data,
-        'folder': file_path
+        'folder': file_path,
+        'undoList': [],
+        'redoList': []
     }
+
+
+def get_data_objs(invetory):
+    return invetory['data']
+
+
+def get_redo_list(inventory):
+    if len(inventory['redoList']):
+        return inventory['redoList'].pop()
+    return get_data_objs(inventory)
+
+
+def add_redo_list(inventory):
+    inventory['redoList'].append(deepcopy(get_data_objs(inventory)))
+
+
+def set_data(inventory, data):
+    inventory['data'] = deepcopy(data)
+
+
+def get_undo_list(inventory):
+    if len(inventory['undoList']):
+        return inventory['undoList'].pop()
+    return None
+
+
+def get_all_undo(inventory):
+    return inventory['undoList']
+
+
+def get_all_redo(inventory):
+    return inventory['redoList']
+
+
+def add_undo_list(inventory):
+    inventory['undoList'].append(deepcopy(get_data_objs(inventory)))
+
+
+def add_undo_list_and_clear_redo(inventory):
+    inventory['undoList'].append(deepcopy(get_data_objs(inventory)))
+    inventory['redoList'] = []
 
 
 def save_data(inventory, file_name="swap.json"):

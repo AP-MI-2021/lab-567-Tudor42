@@ -109,3 +109,103 @@ def test_get_price_sum_per_location():
 
     res = {"aaaa": 18, "bbbb": 30, "cccc": 10, "dddd": 125, "eeee": 18}
     assert res == fn.get_price_sum_per_location(inventory)
+
+
+def test_undo_redo():
+    inventory = iv.creaza_inventoriu()
+
+    iv.add_undo_list(inventory)
+    cr.add_obj(inventory, 19, "L", "L", 8, "aaaa")
+
+    iv.add_undo_list(inventory)
+    cr.add_obj(inventory, 20, "L", "l", 16, "bbbb")
+
+    iv.add_undo_list(inventory)
+    cr.add_obj(inventory, 21, "L", "L", 10, "cccc")
+
+    fn.undo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == [20, "L", "l", 16, "bbbb"]
+    assert cr.get_obj_data_list(inventory, 21) == []
+
+    fn.undo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == []
+    assert cr.get_obj_data_list(inventory, 21) == []
+
+    fn.undo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == []
+    assert cr.get_obj_data_list(inventory, 20) == []
+    assert cr.get_obj_data_list(inventory, 21) == []
+
+    fn.undo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == []
+    assert cr.get_obj_data_list(inventory, 20) == []
+    assert cr.get_obj_data_list(inventory, 21) == []
+
+    iv.add_undo_list_and_clear_redo(inventory)
+    cr.add_obj(inventory, 19, "L", "L", 8, "aaaa")
+
+    iv.add_undo_list_and_clear_redo(inventory)
+    cr.add_obj(inventory, 20, "L", "l", 16, "bbbb")
+
+    iv.add_undo_list_and_clear_redo(inventory)
+    cr.add_obj(inventory, 21, "L", "L", 10, "cccc")
+
+    fn.redo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == [20, "L", "l", 16, "bbbb"]
+    assert cr.get_obj_data_list(inventory, 21) == [21, "L", "L", 10, "cccc"]
+
+    fn.undo(inventory)
+    fn.undo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == []
+    assert cr.get_obj_data_list(inventory, 21) == []
+
+    fn.redo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == [20, "L", "l", 16, "bbbb"]
+    assert cr.get_obj_data_list(inventory, 21) == []
+
+    fn.redo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == [20, "L", "l", 16, "bbbb"]
+    assert cr.get_obj_data_list(inventory, 21) == [21, "L", "L", 10, "cccc"]
+
+    fn.undo(inventory)
+    fn.undo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == []
+    assert cr.get_obj_data_list(inventory, 21) == []
+    iv.add_undo_list_and_clear_redo(inventory)
+    fn.add_obj(inventory, 24, "Ll", "La", 10, "dddd")
+    fn.redo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == []
+    assert cr.get_obj_data_list(inventory, 21) == []
+
+    fn.undo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == []
+    assert cr.get_obj_data_list(inventory, 21) == []
+    assert cr.get_obj_data_list(inventory, 24) == []
+
+    fn.undo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == []
+    assert cr.get_obj_data_list(inventory, 20) == []
+    assert cr.get_obj_data_list(inventory, 21) == []
+    assert cr.get_obj_data_list(inventory, 24) == []
+
+    fn.redo(inventory)
+    fn.redo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == []
+    assert cr.get_obj_data_list(inventory, 21) == []
+    assert cr.get_obj_data_list(inventory, 24) == [24, "Ll", "La", 10, "dddd"]
+
+    fn.redo(inventory)
+    assert cr.get_obj_data_list(inventory, 19) == [19, "L", "L", 8, "aaaa"]
+    assert cr.get_obj_data_list(inventory, 20) == []
+    assert cr.get_obj_data_list(inventory, 21) == []
+    assert cr.get_obj_data_list(inventory, 24) == [24, "Ll", "La", 10, "dddd"]

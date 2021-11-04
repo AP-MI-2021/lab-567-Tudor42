@@ -1,5 +1,9 @@
 from Domain.object import *
 from Logic.CRUD import *
+from Domain.inventory import get_undo_list, get_redo_list,\
+                             add_redo_list, set_data, \
+                             add_undo_list, get_all_undo, \
+                             get_all_redo, get_data_objs
 
 
 def mutare_obiecte(inventory, old_location=None, new_location=None):
@@ -89,7 +93,9 @@ def sort_invetory_by_price(inventory):
     return {
         'data': dict(sorted(get_objs(inventory).items(),
                             key=lambda x: get_price(x[1]))),
-        'folder': get_path(inventory)
+        'folder': get_path(inventory),
+        'undoList': get_all_undo(inventory),
+        'redoList': get_all_redo(inventory)
     }
 
 
@@ -108,3 +114,17 @@ def get_price_sum_per_location(inventory):
         else:
             res[get_location(obj)] += get_price(obj)
     return res
+
+
+def undo(inventory):
+    lst = get_undo_list(inventory)
+    if lst is not None:
+        add_redo_list(inventory)
+        set_data(inventory, lst)
+
+
+def redo(inventory):
+    lst = get_redo_list(inventory)
+    if lst != get_data_objs(inventory):
+        add_undo_list(inventory)
+        set_data(inventory, lst)
